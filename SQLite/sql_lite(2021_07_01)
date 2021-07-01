@@ -1,0 +1,66 @@
+CREATE TABLE myTB ( a INT, b TEXT );                       -- 새롭게 테이블 생성 (및 추가).
+SELECT * FROM sqlite_master WHERE TYPE = "table";    -- 테이블 목록 (SQLite).
+PRAGMA table_info(myTB);                    -- myTB 테이블의 정보 출력
+INSERT INTO myTB VALUES ( 1, 'foo' );
+INSERT INTO myTB VALUES ( 2, 'boo' );
+SELECT * FROM myTB;
+DROP TABLE myTB;                                                -- 테이블 삭제.
+
+SELECT * FROM customer;	
+CREATE TABLE customer2(id INT, name TEXT, zip INT);
+INSERT INTO customer2 SELECT id, name, zip from customer;         -- 두줄 코드를 아래 한줄로 같은 결과를 가짐
+CREATE TABLE customer2 AS SELECT id, name, zip from customer;		-- "customer" 바탕으로 "customer2" 생성.
+SELECT * FROM customer2;						-- "customer2"  테이블 출력.
+DROP TABLE customer2;                                             		-- 테이블 삭제.
+
+CREATE TABLE test (                         		        
+     		id INTEGER,                              --자료형 'int'   
+ 		name VARCHAR(255),              --자료형 'text'        
+    		address VARCHAR(255),           --자료형 'text'    
+    		city VARCHAR(255),                 --자료형 'text'    
+    		state CHAR(2),                            --자료형 'text'    
+    		zip CHAR(10)                              --자료형 'text'    
+		);
+PRAGMA table_info(test); 
+INSERT INTO test VALUES ( 1, "John", "Main St. 123", "Seattle", "WA", 92105);                     -- OK. 
+INSERT INTO test VALUES ( 1, "Jackson", "Broadway Av. 123", "San Diego", "CA", 91910);       -- 중복 id도 OK. 
+INSERT INTO test VALUES ( "A", "John", "Main St. 123", "Seattle", "WA", 92105);     	    -- SQLite에서는 OK.
+SELECT * FROM test; -- 자료형은 가이드라서 지키지는 않는다
+
+DROP TABLE test;                                                  -- "test" 테이블이 이미 있다면 삭제.
+CREATE TABLE test (
+		a INTEGER NOT NULL,              
+    		b VARCHAR(255)
+		);			        -- "a"에 NULL을 허용하지 않는다.
+PRAGMA table_info(test); 
+INSERT INTO test VALUES ( 1, "John");                       -- OK.
+INSERT INTO test (a,b) VALUES ( 3, "Sally");                 -- OK.
+INSERT INTO test (a,b) VALUES ( NULL, "David");          -- NOT OK. NOT NULL이기 때문에 오류
+INSERT INTO test (b) VALUES ( "Paul");                       -- NOT OK. NOT NULL이기 때문에 오류
+SELECT * FROM test;
+
+
+DROP TABLE test;                                                  -- "test" 테이블이 이미 있다면 삭제.
+CREATE TABLE test (
+    		a INTEGER NOT NULL DEFAULT 0,       
+    		b VARCHAR(255) UNIQUE NOT NULL    
+                          );			         -- "a"에는 default 값 설정. "b"에는 중복 허용하지 않음. 
+PRAGMA table_info(test); 
+SELECT * FROM test;
+INSERT INTO test VALUES ( 1, "John");                       -- OK.
+INSERT INTO test (a,b) VALUES ( 3, "Sally");              -- OK.
+INSERT INTO test (b) VALUES ( "Paul");                      -- OK! a값을 안 넣어줬지만 DEFAULT 0 코드에 의해서 0으로 저장됨
+INSERT INTO test (a,b) VALUES ( NULL, "David");    -- NOT OK! NULL을 알아서 0으로 줘야하는데 NULL으로 지정해서
+INSERT INTO test VALUES ( 4, "John");                        -- NOT OK. UNIQUE로 설정해줘서 John이 겹처서 오류 발생
+
+-- PRIMARY KEY 설정과 AUTO_INCREMENT
+DROP TABLE test;                                                  -- "test" 테이블이 이미 있다면 삭제.
+CREATE TABLE test (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,     
+		a VARCHAR(255),
+    		b VARCHAR(255)
+		);
+INSERT INTO test ( a, b ) VALUES ( 'one', 'two' );          -- id로 1 자동 삽입! 
+INSERT INTO test ( a, b ) VALUES ( 'three', 'four' );         -- id로 자동 삽입! 
+INSERT INTO test VALUES (5,  'five', 'six' );                   -- id 5에 삽입
+INSERT INTO test ( a, b ) VALUES ( 'seven', 'eight' );         -- id로 6 자동 삽입! 
