@@ -12,6 +12,7 @@ SELECT * FROM Country ORDER BY Name;    -- 정렬 적용.
 SELECT Name, LifeExpectancy AS 'Life Expectancy' FROM Country; -- 이름 바꿈. 보여주기 식임
 SELECT COUNT(*) FROM Country;                                          -- 행 수 카운팅.
 SELECT COUNT(Name) FROM Country;                                          --특정 행 수 카운팅.
+SELECT COUNT(Population) FROM Country;                                    -- 결측치는 포함 안 됨.
 SELECT * FROM Country ORDER BY Name LIMIT 5;                 -- 출력 수 한정.
 SELECT * FROM Country ORDER BY Name LIMIT 5 OFFSET 5;   -- 첫 5개 건너 뜀. LIMIT, OFFSET 순서 중요
 
