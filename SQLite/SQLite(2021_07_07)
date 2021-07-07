@@ -1,0 +1,63 @@
+-- FOREIGN KEY를 사용하여 테이블 사이의 관계 설정. 
+-- 일종의 제약 (constraint) 역할을 함.
+CREATE TABLE Franchisee (
+  FranchiseeID    INTEGER PRIMARY KEY,  -- PRIMARY KEY =  unique and not null
+  FranchiseeName  TEXT NOT NULL
+);
+
+INSERT INTO Franchisee VALUES (111,"John");		-- 데이터를 입력해 둔다.
+INSERT INTO Franchisee VALUES (112,"Paul");		-- 데이터를 입력해 둔다.
+INSERT INTO Franchisee VALUES (113,"David");		-- 데이터를 입력해 둔다.
+
+SELECT * FROM Franchisee;
+
+CREATE TABLE Store (
+  StoreID     INTEGER PRIMARY KEY, 
+  StoreName   TEXT NOT NULL,
+  FranchiseeID INTEGER NOT NULL,
+  FOREIGN KEY(FranchiseeID) REFERENCES Franchisee(FranchiseeID)
+);   -- Store 테이블의 FranchiseeID와 Franchisee 테이블의 FranchiseeID 연결.
+
+SELECT * FROM Store;
+PRAGMA foreign_key_list(Store);
+
+INSERT INTO Store VALUES (1,"711 Gangnam", 111);	-- OK.
+INSERT INTO Store VALUES (2,"711 Munjeong", 111);	-- OK. 중복이여도 됨
+INSERT INTO Store VALUES (3,"711 Suyu", 113)                -- OK.
+INSERT INTO Store VALUES (4,"711 Youido", 114);	-- FOREIGN KEY constraint failed!
+
+DROP TABLE Franchisee;                                              -- 먼저 삭제할 수 없다!
+DROP TABLE Store;                                                     -- 먼저 삭제 가능.
+
+--INNER JOIN
+SELECT * FROM Customer;
+SELECT * FROM Item;
+SELECT * FROM Sale;
+
+SELECT a.name, b.item_id, b.quantity, b.price 
+        FROM customer AS a 
+        INNER JOIN sale AS b 
+        ON a.id = b.customer_id;
+
+--LEFT JOIN, 결측값 생김
+SELECT a.name, b.item_id, b.quantity, b.price 
+        FROM customer AS a 
+        LEFT JOIN sale AS b 
+        ON a.id = b.customer_id;
+
+-- Customer - Sale - Item 합치기
+DROP VIEW myView;
+CREATE VIEW myView AS SELECT a.name, b.item_id, b.quantity, b.price 
+        FROM customer AS a 
+        INNER JOIN sale AS b 
+        ON a.id = b.customer_id;
+        
+SELECT a.name, b.name As item_name, a.quantity, a.price 
+        FROM myView AS a 
+        LEFT JOIN item AS b 
+        ON a.item_id = b.id;
+
+SELECT a.name, c.item_id, b.quantity, b.price FROM customer AS a 
+        INNER JOIN sale AS b ON a.id = b.customer_id;
+        INNER JOIN item AS c ON b.item_id = c.id;
+
