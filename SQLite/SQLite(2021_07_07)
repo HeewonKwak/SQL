@@ -57,7 +57,7 @@ SELECT a.name, b.name As item_name, a.quantity, a.price
         LEFT JOIN item AS b 
         ON a.item_id = b.id;
 
-SELECT a.name, c.item_id, b.quantity, b.price FROM customer AS a 
-        INNER JOIN sale AS b ON a.id = b.customer_id;
+SELECT a.name, c.name as item_name, b.quantity, b.price FROM customer AS a 
+        INNER JOIN sale AS b ON a.id = b.customer_id
         INNER JOIN item AS c ON b.item_id = c.id;
 
