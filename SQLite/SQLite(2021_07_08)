@@ -1,0 +1,5 @@
+SELECT TIME('now', '+9 hours');
+SELECT DATETIME('now', '+9 hours');
+SELECT DATETIME('2015-07-25 12:30:11', '+9 hours');
+
+SELECT STRFTIME('%w',date) FROM sale;
